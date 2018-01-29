@@ -41,6 +41,7 @@ int main() {
                 printf("uECC_make_key() failed\n");
                 return 1;
             }
+	memcpy(hash, public, sizeof(hash));
 	
     for (c = 0; c < num_curves; ++c) {
         for (i = 0; i < 1000; ++i) {
@@ -48,7 +49,7 @@ int main() {
           //  fflush(stdout);
 
             
-            memcpy(hash, public, sizeof(hash));
+            
             
             if (!uECC_sign(private, hash, sizeof(hash), sig, curves[c])) {
                 printf("uECC_sign() failed\n");
@@ -77,6 +78,12 @@ int main() {
                 printf("uECC_make_key() failed\n");
                 return 1;
             }
+	memcpy(hash, public, sizeof(hash));
+	if (!uECC_sign(private, hash, sizeof(hash), sig, curves[c])) {
+                printf("uECC_sign() failed\n");
+                return 1;
+            }
+			
 	
     for (c = 0; c < num_curves; ++c) {
         for (i = 0; i < 1000; ++i) {
@@ -84,14 +91,9 @@ int main() {
           //  fflush(stdout);
 
             
-            memcpy(hash, public, sizeof(hash));
+            
 
-			/*
-            if (!uECC_sign(private, hash, sizeof(hash), sig, curves[c])) {
-                printf("uECC_sign() failed\n");
-                return 1;
-            }
-			*/
+		
     		  
     		if (!uECC_verify(public, hash, sizeof(hash), sig, curves[c])) {
                 printf("uECC_verify() failed\n");
