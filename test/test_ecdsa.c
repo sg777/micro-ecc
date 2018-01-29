@@ -74,18 +74,21 @@ int main() {
 	
 	/* here, do your time-consuming job */
     //printf("Testing 256 signatures\n");
+#if 1
+	c=0;
     if (!uECC_make_key(public, private, curves[c])) {
                 printf("uECC_make_key() failed\n");
                 return 1;
             }
 	memcpy(hash, public, sizeof(hash));
+
 	if (!uECC_sign(private, hash, sizeof(hash), sig, curves[c])) {
                 printf("uECC_sign() failed\n");
                 return 1;
             }
-			
-	
-    for (c = 0; c < num_curves; ++c) {
+#endif			
+#if 1
+   
         for (i = 0; i < 1000; ++i) {
         //    printf(".");
           //  fflush(stdout);
@@ -101,12 +104,12 @@ int main() {
             }
         }
        // printf("\n");
-    }
+   
 	
 	end = clock();
 	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("\nExecution time for verification :%f",time_spent);
 
-	    
+#endif	    
     return 0;
 }
