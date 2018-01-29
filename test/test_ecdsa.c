@@ -1,10 +1,10 @@
 /* Copyright 2014, Kenneth MacKay. Licensed under the BSD 2-clause license. */
 
-#include "uECC.h"
+#include "../uECC.h"
 
 #include <stdio.h>
 #include <string.h>
-
+#include <time.h>
 int main() {
     int i, c;
     uint8_t private[32] = {0};
@@ -29,6 +29,12 @@ int main() {
 #if uECC_SUPPORTS_secp256k1
     curves[num_curves++] = uECC_secp256k1();
 #endif
+
+	clock_t begin = clock();
+	
+	/* here, do your time-consuming job */
+	
+	
     
     printf("Testing 256 signatures\n");
     for (c = 0; c < num_curves; ++c) {
@@ -54,6 +60,10 @@ int main() {
         }
         printf("\n");
     }
+	
+	clock_t end = clock();
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("\nExecution time:%f",time_spent);
     
     return 0;
 }
