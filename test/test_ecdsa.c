@@ -12,6 +12,9 @@ int main() {
     uint8_t hash[32] = {0};
     uint8_t sig[64] = {0};
 
+	clock_t begin,end;
+	double time_spent;
+	
     const struct uECC_Curve_t * curves[5];
     int num_curves = 0;
 #if uECC_SUPPORTS_secp160r1
@@ -30,22 +33,21 @@ int main() {
     curves[num_curves++] = uECC_secp256k1();
 #endif
 
-	clock_t begin = clock();
+	begin = clock();
 	
 	/* here, do your time-consuming job */
-	
-	
-    
-    printf("Testing 256 signatures\n");
-    for (c = 0; c < num_curves; ++c) {
-        for (i = 0; i < 256; ++i) {
-            printf(".");
-            fflush(stdout);
-
-            if (!uECC_make_key(public, private, curves[c])) {
+    //printf("Testing 256 signatures\n");
+    if (!uECC_make_key(public, private, curves[c])) {
                 printf("uECC_make_key() failed\n");
                 return 1;
             }
+	
+    for (c = 0; c < num_curves; ++c) {
+        for (i = 0; i < 1000; ++i) {
+        //    printf(".");
+          //  fflush(stdout);
+
+            
             memcpy(hash, public, sizeof(hash));
             
             if (!uECC_sign(private, hash, sizeof(hash), sig, curves[c])) {
@@ -53,17 +55,56 @@ int main() {
                 return 1;
             }
 
-            if (!uECC_verify(public, hash, sizeof(hash), sig, curves[c])) {
+    		/*  
+    		if (!uECC_verify(public, hash, sizeof(hash), sig, curves[c])) {
+                printf("uECC_verify() failed\n");
+                return 1;
+            }*/
+        }
+       // printf("\n");
+    }
+	
+	end = clock();
+	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("\nExecution time for signing :%f",time_spent);
+
+
+	begin = clock();
+	
+	/* here, do your time-consuming job */
+    //printf("Testing 256 signatures\n");
+    if (!uECC_make_key(public, private, curves[c])) {
+                printf("uECC_make_key() failed\n");
+                return 1;
+            }
+	
+    for (c = 0; c < num_curves; ++c) {
+        for (i = 0; i < 1000; ++i) {
+        //    printf(".");
+          //  fflush(stdout);
+
+            
+            memcpy(hash, public, sizeof(hash));
+
+			/*
+            if (!uECC_sign(private, hash, sizeof(hash), sig, curves[c])) {
+                printf("uECC_sign() failed\n");
+                return 1;
+            }
+			*/
+    		  
+    		if (!uECC_verify(public, hash, sizeof(hash), sig, curves[c])) {
                 printf("uECC_verify() failed\n");
                 return 1;
             }
         }
-        printf("\n");
+       // printf("\n");
     }
 	
-	clock_t end = clock();
-	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("\nExecution time:%f",time_spent);
-    
+	end = clock();
+	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("\nExecution time for verification :%f",time_spent);
+
+	    
     return 0;
 }
